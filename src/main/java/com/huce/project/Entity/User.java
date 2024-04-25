@@ -13,61 +13,19 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "user_id")
-    private int userID;
+    private long userID;
     
-    @Column(name = "username")
+    @Column(name = "username",length =50, nullable=false, unique = true)
     private String username;
     
-    @Column(name = "pass_word")
+    @Column(name = "pass_word", length = 50, nullable= false)
     private String password;
     
-    @Column(name = "email")
+    @Column(name = "email", length = 100, nullable=false)
     private String email;
-    
-    @Column(name = "role_id")
-    private int role = 2;
-    
+   
     public User() {}
     
-    public int getUserID() {
-        return userID;
-    }
-
-    public void setUserID(int userID) {
-        this.userID = userID;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public int getRole() {
-        return role;
-    }
-
-    public void setRole(int role) {
-        this.role = role;
-    }
 
     public User(String username, String password, String email) {
         this.username = username;
