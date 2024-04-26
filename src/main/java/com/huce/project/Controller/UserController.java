@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.huce.project.Entity.User;
+import com.huce.project.Entity.UserEntity;
 import com.huce.project.Service.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -17,7 +17,7 @@ public class UserController {
     private UserService userService;
     
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(@RequestBody User newUser) {
+    public ResponseEntity<String> registerUser(@RequestBody UserEntity newUser) {
         try {
 
             userService.registerUser(newUser);
@@ -28,7 +28,7 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody User user) {
+    public ResponseEntity<String> loginUser(@RequestBody UserEntity user) {
         try {
             userService.loginUser(user);
 

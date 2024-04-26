@@ -1,9 +1,9 @@
 package com.huce.project.Service;
-import com.huce.project.Entity.User;
+import com.huce.project.Entity.UserEntity;
 
 public interface UserService {
-    User registerUser(User user);
-    User loginUser(User user);
+    UserEntity registerUser(UserEntity user);
+    UserEntity loginUser(UserEntity user);
 
 }
 

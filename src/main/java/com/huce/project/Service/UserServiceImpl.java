@@ -2,7 +2,7 @@ package com.huce.project.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional; 
-import com.huce.project.Entity.User;
+import com.huce.project.Entity.UserEntity;
 import com.huce.project.Repository.UserRepository;
 
 @Service
@@ -16,8 +16,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional 
-    public User registerUser(User user) {
-        User existingUser = userRepository.findByUsername(user.getUsername());
+    public UserEntity registerUser(UserEntity user) {
+        UserEntity existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser != null) {
             throw new IllegalArgumentException("Username already exists");
         }
@@ -40,9 +40,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional 
-    public User loginUser(User user) {
+    public UserEntity loginUser(UserEntity user) {
 
-        User existingUser = userRepository.findByUsername(user.getUsername());
+        UserEntity existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser == null || existingUser.getUsername().isEmpty()) {
             throw new IllegalArgumentException("Username does not exist");
         } else {

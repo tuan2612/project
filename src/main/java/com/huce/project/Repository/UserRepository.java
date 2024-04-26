@@ -2,9 +2,9 @@ package com.huce.project.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.huce.project.Entity.User;
+import com.huce.project.Entity.UserEntity;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByUsername(String userName);
+public interface UserRepository extends JpaRepository<UserEntity, Integer> {
+    UserEntity findByUsername(String userName);
 
 }
