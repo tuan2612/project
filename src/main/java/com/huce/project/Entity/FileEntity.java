@@ -23,7 +23,7 @@ public class FileEntity {
     private String filetype;
 
     @Column(name = "user_id", nullable = false)
-    private UserEntity userId;
+    private Long userId;
 
     @Column(name = "file_size", nullable = false)
     private int fileSize;
@@ -61,14 +61,6 @@ public class FileEntity {
         this.filetype = filetype;
     }
 
-    public UserEntity getUserId() {
-        return userId;
-    }
-
-    public void setUserId(UserEntity userId) {
-        this.userId = userId;
-    }
-
     public int getFileSize() {
         return fileSize;
     }
@@ -91,6 +83,14 @@ public class FileEntity {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
 }

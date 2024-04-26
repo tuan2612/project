@@ -5,8 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.Table;
 
 @Entity
@@ -16,16 +15,14 @@ public class ActivityLogEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity userID;
+    @Column(name = "user_id", nullable = false)
+    private long userID;
 
     @Column(name = "activity")
     private String activity;
 
-    @ManyToOne
-    @JoinColumn(name = "file_id", nullable = false)
-    private FileEntity fileID;
+    @Column(name = "file_id", nullable = false)
+    private long fileID;
 
     public long getId() {
         return id;
@@ -33,14 +30,6 @@ public class ActivityLogEntity {
 
     public void setId(long id) {
         this.id = id;
-    }
-
-    public UserEntity getUserID() {
-        return userID;
-    }
-
-    public void setUserID(UserEntity userID) {
-        this.userID = userID;
     }
 
     public String getActivity() {
@@ -51,11 +40,19 @@ public class ActivityLogEntity {
         this.activity = activity;
     }
 
-    public FileEntity getFileID() {
+    public long getUserID() {
+        return userID;
+    }
+
+    public void setUserID(long userID) {
+        this.userID = userID;
+    }
+
+    public long getFileID() {
         return fileID;
     }
 
-    public void setFileID(FileEntity fileID) {
+    public void setFileID(long fileID) {
         this.fileID = fileID;
     }
 

@@ -5,8 +5,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import java.sql.Date;
 
@@ -15,27 +13,29 @@ import java.sql.Date;
 public class AccessRightEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int accessId;
+    private long accessId;
 
-    @ManyToOne
-    @JoinColumn(name = "file_id", nullable = false)
-    private FileEntity fileId;
+    @Column(name = "file_id", nullable = false)
+    private long fileId;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity userId;
+ 
+    @Column(name = "user_id", nullable = false)
+    private long userId;
 
     @Column(name = "access_type", nullable = false)
     private EnumAccessType accessType;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    private RoleEntity roleId;
+
+    @Column(name = "role_id")
+    private long roleId;
 
     @Column(name = "grant_date", nullable = false)
     private Date grantDate;
 
-    public int getAccessId() {
+    public AccessRightEntity() {
+    }
+
+    public long getAccessId() {
         return accessId;
     }
 
@@ -43,19 +43,19 @@ public class AccessRightEntity {
         this.accessId = accessId;
     }
 
-    public FileEntity getFileId() {
+    public long getFileId() {
         return fileId;
     }
 
-    public void setFileId(FileEntity fileId) {
+    public void setFileId(long fileId) {
         this.fileId = fileId;
     }
 
-    public UserEntity getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(UserEntity userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -67,11 +67,11 @@ public class AccessRightEntity {
         this.accessType = accessType;
     }
 
-    public RoleEntity getRoleId() {
+    public long getRoleId() {
         return roleId;
     }
 
-    public void setRoleId(RoleEntity roleId) {
+    public void setRoleId(long roleId) {
         this.roleId = roleId;
     }
 
@@ -82,10 +82,6 @@ public class AccessRightEntity {
     public void setGrantDate(Date grantDate) {
         this.grantDate = grantDate;
     }
-
-    public AccessRightEntity() {
-        this.roleId = new RoleEntity();
-        this.roleId.setRoleID(1);
-    }
+    
     
 }
