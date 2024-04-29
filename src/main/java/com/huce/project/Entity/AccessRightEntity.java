@@ -15,9 +15,8 @@ public class AccessRightEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long accessId;
 
-    @Column(name = "file_id", nullable = false)
-    private long fileId;
-
+    @Column(name = "fileorfolder_id", nullable = false)
+    private long fofId;
  
     @Column(name = "user_id", nullable = false)
     private long userId;
@@ -25,13 +24,10 @@ public class AccessRightEntity {
     @Column(name = "access_type", nullable = false)
     private EnumAccessType accessType;
 
-
-    @Column(name = "role_id")
-    private long roleId;
-
     @Column(name = "grant_date", nullable = false)
     private Date grantDate;
-
+    @Column(name="typefof",nullable = false)
+    private int typefof;
     public AccessRightEntity() {
     }
 
@@ -43,12 +39,12 @@ public class AccessRightEntity {
         this.accessId = accessId;
     }
 
-    public long getFileId() {
-        return fileId;
+    public long getFolderId() {
+        return fofId;
     }
 
-    public void setFileId(long fileId) {
-        this.fileId = fileId;
+    public void setFolderId(long fofId) {
+        this.fofId = fofId;
     }
 
     public long getUserId() {
@@ -58,21 +54,18 @@ public class AccessRightEntity {
     public void setUserId(long userId) {
         this.userId = userId;
     }
-
+    public int getTypefof(){
+        return typefof;
+    }
+    public void setTypefof(int typefof){
+        this.typefof=typefof;
+    }
     public EnumAccessType getAccessType() {
         return accessType;
     }
 
     public void setAccessType(EnumAccessType accessType) {
         this.accessType = accessType;
-    }
-
-    public long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(long roleId) {
-        this.roleId = roleId;
     }
 
     public Date getGrantDate() {

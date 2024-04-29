@@ -23,7 +23,8 @@ public class UserEntity {
 
     @Column(name = "email", length = 100, nullable = false)
     private String email;
-
+    @Column(name="role_id",nullable = false)
+    private int role_id;
     @Column(name = "registration_date")
     private String registrationDate;
 

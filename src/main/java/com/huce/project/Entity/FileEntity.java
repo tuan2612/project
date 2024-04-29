@@ -22,14 +22,11 @@ public class FileEntity {
     @Column(name = "filetype", length = 50, nullable = false)
     private String filetype;
 
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
-
     @Column(name = "file_size", nullable = false)
     private int fileSize;
 
-    @Column(name = "file_url", nullable = false)
-    private String fileUrl;
+    @Column(name = "folder_id", nullable = false)
+    private String folder_id;
 
     @Column(name = "created_at")
     private Date createdAt;
@@ -69,12 +66,12 @@ public class FileEntity {
         this.fileSize = fileSize;
     }
 
-    public String getFileUrl() {
-        return fileUrl;
+    public String getFolderId() {
+        return folder_id;
     }
 
-    public void setFileUrl(String fileUrl) {
-        this.fileUrl = fileUrl;
+    public void setFolderId(String folder_id) {
+        this.folder_id = folder_id;
     }
 
     public Date getCreatedAt() {
@@ -85,12 +82,5 @@ public class FileEntity {
         this.createdAt = createdAt;
     }
 
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
 
 }
