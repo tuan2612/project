@@ -25,6 +25,8 @@ import com.huce.project.model.FileInfo;
 
 
 
+
+
 @Controller
 public class FilesController {
 
@@ -33,12 +35,13 @@ public class FilesController {
 
   @PostMapping("/upload")
   public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) {
-    String message = "";
+    String message = "";        
     try {
       List<String> fileNames = new ArrayList<>();
 
       Arrays.asList(files).stream().forEach(file -> {
         storageService.save(file);
+        System.out.println(file.getOriginalFilename());
         fileNames.add(file.getOriginalFilename());
       });
 
@@ -49,7 +52,7 @@ public class FilesController {
       return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage(message));
     }
   }
-
+  
   @GetMapping("/files")
   public ResponseEntity<List<FileInfo>> getListFiles() {
     List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
