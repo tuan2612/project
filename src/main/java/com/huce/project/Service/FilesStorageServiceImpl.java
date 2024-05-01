@@ -8,20 +8,21 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Stream;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.StandardCopyOption;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.Date;
+import com.huce.project.Service.FileService;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
   private final String pathroot="D:\\StoreFileUser";
   private final Path root = Paths.get("D:\\StoreFileUser");
-
+  @Autowired
+  FileService filesv;
   @Override
   public void init() {
       File directory = new File(pathroot);
@@ -35,7 +36,7 @@ public class FilesStorageServiceImpl implements FilesStorageService {
             e.printStackTrace();
           }
       }
-  
+      
   }
 
   @Override
@@ -43,6 +44,7 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     String urlfile=file.getOriginalFilename();
     String urlroot=pathroot;
     Path pathUrlroot=root;
+    String username=urlfile.substring(0,urlfile.indexOf("/"));
     while (urlfile.contains("/")) {
       int index=urlfile.indexOf("/");
       File subDir = new File(urlroot,urlfile.substring(0, index) );
@@ -79,7 +81,7 @@ public class FilesStorageServiceImpl implements FilesStorageService {
         e.printStackTrace();
       }
     }
-    fileInfo(urlroot+"\\"+urlfile);
+    filesv.saveFile(urlroot, urlfile, username);
   }
 
   @Override
@@ -112,24 +114,5 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     }
   }
 
-  @Override
-  public void fileInfo(String url) {
-    try {
-      // Chuyển đổi đường dẫn thành đối tượng Path
-      Path path = Paths.get(url);
-
-      // Lấy thông tin cơ bản về tập tin
-      BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
-
-      // Lấy thời gian mở tập tin
-      long openTimeInMillis = attributes.creationTime().toMillis();
-      
-      // Chuyển đổi thời gian mở thành đối tượng Date
-      Date openDate = new Date(openTimeInMillis);
-      
-      System.out.println("File opened at: " + openDate);
-  } catch (IOException e) {
-      System.out.println("Error occurred: " + e.getMessage());
-  }
-  }
+  
 }

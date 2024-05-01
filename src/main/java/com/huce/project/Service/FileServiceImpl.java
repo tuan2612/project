@@ -12,9 +12,12 @@ import org.springframework.stereotype.Service;
 
 import com.huce.project.Repository.FileRepository;
 import com.huce.project.Repository.FolderRepository;
+import com.huce.project.Repository.UserRepository;
 import com.huce.project.Entity.AccessRightEntity;
+import com.huce.project.Entity.EnumAccessType;
 import com.huce.project.Entity.FileEntity;
 import com.huce.project.Entity.FolderEntity;
+import com.huce.project.Entity.UserEntity;
 import com.huce.project.Repository.AccessRightRepository;
 @Service
 public class FileServiceImpl implements FileService {
@@ -24,12 +27,17 @@ public class FileServiceImpl implements FileService {
     private FolderRepository folderrepo;
     @Autowired
     private AccessRightRepository accessrepo;
+    @Autowired
+    private UserRepository userrepo;
+    @SuppressWarnings("null")
     @Override
-    public void saveFile(String urlfolder,String namefile) {
+    public void saveFile(String urlfolder,String namefile,String username) {
         FolderEntity folders=folderrepo.findByFoldername(urlfolder);
         FileEntity file=new FileEntity();
         FolderEntity folder=new FolderEntity();
         AccessRightEntity accsess=new AccessRightEntity();
+        UserEntity users=userrepo.findByUsername(username);
+        if(users!=null){
         if(folders==null){
             try {
             // Chuyển đổi đường dẫn thành đối tượng Path
@@ -50,6 +58,12 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             System.out.println("Error occurred: " + e.getMessage());
         }
+            long folder_id=folderrepo.findByFoldername(urlfolder).getFolderId();
+            accsess.setUserId(users.getUserID());
+            accsess.setAccessType(EnumAccessType.READ_WRITE);
+            accsess.setFolderId(folder_id);
+            accsess.setTypefof(0);
+            accessrepo.save(accsess);
         }
         Path pathfile = Paths.get(urlfolder+"\\"+namefile);
         try {
@@ -60,17 +74,16 @@ public class FileServiceImpl implements FileService {
             // Chuyển đổi thời gian mở thành đối tượng Date
             Date openDate = new Date(openTimeInMillis);
             file.setFilename(namefile);
-            file.setFileSize(0);
             file.setFiletype(namefile.substring(namefile.indexOf(".")+1));
-            file.setFolderId(folder.getFolderId());
             file.setFolderId(folder_id);
             file.setCreatedAt(openDate);
             file.setFileSize(size);
+            filerepo.save(file);
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+    }
         }
     }
     

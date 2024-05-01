@@ -24,8 +24,6 @@ public class AccessRightEntity {
     @Column(name = "access_type", nullable = false)
     private EnumAccessType accessType;
 
-    @Column(name = "grant_date", nullable = false)
-    private Date grantDate;
     @Column(name="typefof",nullable = false)
     private int typefof;
     public AccessRightEntity() {
@@ -67,14 +65,5 @@ public class AccessRightEntity {
     public void setAccessType(EnumAccessType accessType) {
         this.accessType = accessType;
     }
-
-    public Date getGrantDate() {
-        return grantDate;
-    }
-
-    public void setGrantDate(Date grantDate) {
-        this.grantDate = grantDate;
-    }
-    
     
 }
