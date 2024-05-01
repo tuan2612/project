@@ -23,10 +23,10 @@ public class FileEntity {
     private String filetype;
 
     @Column(name = "file_size", nullable = false)
-    private int fileSize;
+    private long fileSize;
 
     @Column(name = "folder_id", nullable = false)
-    private String folder_id;
+    private long folder_id;
 
     @Column(name = "created_at")
     private Date createdAt;
@@ -58,19 +58,19 @@ public class FileEntity {
         this.filetype = filetype;
     }
 
-    public int getFileSize() {
+    public long getFileSize() {
         return fileSize;
     }
 
-    public void setFileSize(int fileSize) {
+    public void setFileSize(long fileSize) {
         this.fileSize = fileSize;
     }
 
-    public String getFolderId() {
+    public long getFolderId() {
         return folder_id;
     }
 
-    public void setFolderId(String folder_id) {
+    public void setFolderId(long folder_id) {
         this.folder_id = folder_id;
     }
 

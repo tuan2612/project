@@ -19,7 +19,8 @@ public class FolderEntity {
 
     @Column(name = "created_at")
     private Date createdAt;
-
+    @Column(name="folder_size",nullable = false,length = 20)
+    private long folder_size;
     public FolderEntity() {
     }
 
@@ -47,5 +48,11 @@ public class FolderEntity {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+    public long getFoldersize(){
+        return folder_size;
+    }
+    public void setFoldersize(long folder_size){
+        this.folder_size=folder_size;
     }
 }

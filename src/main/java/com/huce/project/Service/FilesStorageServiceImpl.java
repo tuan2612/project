@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
+import java.util.Date;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
@@ -22,11 +24,18 @@ public class FilesStorageServiceImpl implements FilesStorageService {
 
   @Override
   public void init() {
-    try {
-      Files.createDirectory(root);
-    } catch (IOException e) {
-      throw new RuntimeException("Could not initialize folder for upload!");
-    }
+      File directory = new File(pathroot);
+        if (directory.exists() && directory.isDirectory()) {
+          System.out.println("Thư mục tồn tại trên ổ đĩa D:");
+      } else {
+          System.out.println("Thư mục không tồn tại trên ổ đĩa D:");
+          try {
+            Files.createDirectories(root);
+          } catch (IOException e) {
+            e.printStackTrace();
+          }
+      }
+  
   }
 
   @Override
@@ -52,7 +61,12 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     }
     if(urlfile.contains(".")){
     try {
+      int index=0;
       pathUrlroot=Paths.get(urlroot,urlfile);
+      while(Files.exists(pathUrlroot)){
+        index++;
+        pathUrlroot=Paths.get(urlroot,urlfile.substring(0,urlfile.indexOf("."))+"("+String.valueOf(index)+")"+urlfile.substring(urlfile.indexOf(".")));
+      }
       Files.copy(file.getInputStream(), pathUrlroot,StandardCopyOption.REPLACE_EXISTING);
     } catch (Exception e) {
       throw new RuntimeException("Could not store the file. Error: " + e.getMessage());
@@ -65,6 +79,7 @@ public class FilesStorageServiceImpl implements FilesStorageService {
         e.printStackTrace();
       }
     }
+    fileInfo(urlroot+"\\"+urlfile);
   }
 
   @Override
@@ -95,5 +110,26 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     } catch (IOException e) {
       throw new RuntimeException("Could not load the files!");
     }
+  }
+
+  @Override
+  public void fileInfo(String url) {
+    try {
+      // Chuyển đổi đường dẫn thành đối tượng Path
+      Path path = Paths.get(url);
+
+      // Lấy thông tin cơ bản về tập tin
+      BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+
+      // Lấy thời gian mở tập tin
+      long openTimeInMillis = attributes.creationTime().toMillis();
+      
+      // Chuyển đổi thời gian mở thành đối tượng Date
+      Date openDate = new Date(openTimeInMillis);
+      
+      System.out.println("File opened at: " + openDate);
+  } catch (IOException e) {
+      System.out.println("Error occurred: " + e.getMessage());
+  }
   }
 }

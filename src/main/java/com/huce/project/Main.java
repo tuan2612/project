@@ -18,7 +18,7 @@ public class Main implements CommandLineRunner{
     @Override
   	public void run(String... args) {
     try {
-      storageService.deleteAll();
+      //storageService.deleteAll();
       storageService.init();
     } catch (Exception e) {
       // Handle initialization errors gracefully
