@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.*;
 
 import com.huce.project.Entity.UserEntity;
 import com.huce.project.Service.UserService;
-import org.springframework.web.bind.annotation.GetMapping;
+import com.huce.project.Utils.JWTUtils;
+import com.huce.project.model.LoginRequestDTO;
+import com.huce.project.model.LoginResponseDTO;
 
 @RestController
 @RequestMapping("/users")
@@ -15,7 +17,7 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-    
+
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserEntity newUser) {
         try {
@@ -27,15 +29,17 @@ public class UserController {
         }
     }
 
-    @GetMapping("/login")
-    public ResponseEntity<String> loginUser(@RequestBody UserEntity user) {
+    @PostMapping("/login")
+    public ResponseEntity<?> loginUser(@RequestBody LoginRequestDTO loginRequest) {
         try {
-            userService.loginUser(user);
-
-            return new ResponseEntity<>("Login successful", HttpStatus.OK);
+            
+            userService.loginUser(loginRequest.getUsername(), loginRequest.getPassword());
+           String token = JWTUtils.generateToken(loginRequest.getUsername());
+            LoginResponseDTO responseDTO = new LoginResponseDTO(token);
+            return ResponseEntity.ok(responseDTO);
         } catch (IllegalArgumentException e) {
 
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

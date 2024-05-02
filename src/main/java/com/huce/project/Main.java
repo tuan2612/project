@@ -17,7 +17,7 @@ public class Main implements CommandLineRunner{
 
     @Override
   	public void run(String... args) {
-    try {
+    try { 
       //storageService.deleteAll();
       storageService.init();
     } catch (Exception e) {

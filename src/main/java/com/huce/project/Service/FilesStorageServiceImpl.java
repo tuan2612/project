@@ -19,8 +19,8 @@ import com.huce.project.Service.FileService;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
-  private final String pathroot="D:\\StoreFileUser";
-  private final Path root = Paths.get("D:\\StoreFileUser");
+  private final String pathroot="F:\\StoreFileUser";
+  private final Path root = Paths.get("F:\\StoreFileUser");
   @Autowired
   FileService filesv;
   @Override
