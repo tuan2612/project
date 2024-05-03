@@ -1,5 +1,6 @@
 package com.huce.project.Entity;
 
+import java.sql.Timestamp;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class UserEntity {
     @Column(name="role_id",nullable = false)
     private int role_id;
     @Column(name = "registration_date")
-    private String registrationDate;
+    private Timestamp registrationDate;
 
     public UserEntity() {
     }
@@ -69,12 +70,22 @@ public class UserEntity {
         this.email = email;
     }
 
-    public String getRegistrationDate() {
+    public int getRole_id() {
+        return role_id;
+    }
+
+    public void setRole_id(int role_id) {
+        this.role_id = role_id;
+    }
+
+    public Timestamp getRegistrationDate() {
         return registrationDate;
     }
 
-    public void setRegistrationDate(String registrationDate) {
+    public void setRegistrationDate(Timestamp registrationDate) {
         this.registrationDate = registrationDate;
     }
+
+    
     
 }
