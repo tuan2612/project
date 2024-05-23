@@ -1,4 +1,4 @@
-package com.huce.project.Controller;
+package com.huce.project.controller;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import com.huce.project.Service.FilesStorageService;
 import com.huce.project.message.ResponseMessage;
 import com.huce.project.model.FileInfo;
+import com.huce.project.service.FilesStorageService;
 
 
 

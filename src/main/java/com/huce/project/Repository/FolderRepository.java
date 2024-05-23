@@ -1,7 +1,7 @@
-package com.huce.project.Repository;
-import com.huce.project.Entity.FolderEntity;
+package com.huce.project.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+
+import com.huce.project.entity.FolderEntity;
 public interface FolderRepository extends JpaRepository<FolderEntity, Long> {
     FolderEntity findByFoldername(String foldername);
 }

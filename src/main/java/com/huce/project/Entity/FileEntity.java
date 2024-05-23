@@ -1,6 +1,8 @@
-package com.huce.project.Entity;
+package com.huce.project.entity;
 
 import java.util.Date;
+
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,9 +10,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "files")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class FileEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,58 +37,10 @@ public class FileEntity {
     private long folder_id;
 
     @Column(name = "created_at")
+    @CreationTimestamp
     private Date createdAt;
 
-    public FileEntity() {
-    }
 
-    public long getFileId() {
-        return fileId;
-    }
-
-    public void setFileId(long fileId) {
-        this.fileId = fileId;
-    }
-
-    public String getFilename() {
-        return filename;
-    }
-
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
-
-    public String getFiletype() {
-        return filetype;
-    }
-
-    public void setFiletype(String filetype) {
-        this.filetype = filetype;
-    }
-
-    public long getFileSize() {
-        return fileSize;
-    }
-
-    public void setFileSize(long fileSize) {
-        this.fileSize = fileSize;
-    }
-
-    public long getFolderId() {
-        return folder_id;
-    }
-
-    public void setFolderId(long folder_id) {
-        this.folder_id = folder_id;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
 
 
 }

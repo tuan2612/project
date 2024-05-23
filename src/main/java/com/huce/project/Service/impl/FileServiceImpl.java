@@ -1,24 +1,23 @@
-package com.huce.project.Service;
-
+package com.huce.project.service.impl;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.Date;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.huce.project.Repository.FileRepository;
-import com.huce.project.Repository.FolderRepository;
-import com.huce.project.Repository.UserRepository;
-import com.huce.project.Entity.AccessRightEntity;
-import com.huce.project.Entity.EnumAccessType;
-import com.huce.project.Entity.FileEntity;
-import com.huce.project.Entity.FolderEntity;
-import com.huce.project.Entity.UserEntity;
-import com.huce.project.Repository.AccessRightRepository;
+import com.huce.project.repository.FileRepository;
+import com.huce.project.repository.FolderRepository;
+import com.huce.project.repository.UserRepository;
+import com.huce.project.service.FileService;
+import com.huce.project.entity.AccessRightEntity;
+import com.huce.project.entity.EnumAccessType;
+import com.huce.project.entity.FileEntity;
+import com.huce.project.entity.FolderEntity;
+import com.huce.project.entity.UserEntity;
+import com.huce.project.repository.AccessRightRepository;
 @Service
 public class FileServiceImpl implements FileService {
     @Autowired
@@ -52,7 +51,7 @@ public class FileServiceImpl implements FileService {
             // Chuyển đổi thời gian mở thành đối tượng Date
             Date openDate = new Date(openTimeInMillis);
             folder.setFoldername(urlfolder);
-            folder.setFoldersize(size);
+            folder.setFolder_size(size);
             folder.setCreatedAt(openDate);
             folderrepo.save(folder);
         } catch (IOException e) {
@@ -61,7 +60,7 @@ public class FileServiceImpl implements FileService {
             long folder_id=folderrepo.findByFoldername(urlfolder).getFolderId();
             accsess.setUserId(users.getUserID());
             accsess.setAccessType(EnumAccessType.READ_WRITE);
-            accsess.setFolderId(folder_id);
+            accsess.setFofId(folder_id);
             accsess.setTypefof(0);
             accessrepo.save(accsess);
         }
@@ -75,7 +74,7 @@ public class FileServiceImpl implements FileService {
             Date openDate = new Date(openTimeInMillis);
             file.setFilename(namefile);
             file.setFiletype(namefile.substring(namefile.indexOf(".")+1));
-            file.setFolderId(folder_id);
+            file.setFolder_id(folder_id);
             file.setCreatedAt(openDate);
             file.setFileSize(size);
             filerepo.save(file);

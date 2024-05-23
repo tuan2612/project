@@ -1,4 +1,4 @@
-package com.huce.project.Service;
+package com.huce.project.service.impl;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +14,11 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
+
+import com.huce.project.service.FileService;
+import com.huce.project.service.FilesStorageService;
+
 import java.nio.file.StandardCopyOption;
-import com.huce.project.Service.FileService;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {

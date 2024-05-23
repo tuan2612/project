@@ -1,22 +1,24 @@
-package com.huce.project.Service;
-
-import java.sql.Timestamp;
-import java.util.Date;
+package com.huce.project.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.huce.project.Entity.UserEntity;
-import com.huce.project.Repository.UserRepository;
+
+import com.huce.project.repository.UserRepository;
+import com.huce.project.service.UserService;
+import com.huce.project.entity.UserEntity;
 
 @Service
 public class UserServiceImpl implements UserService {
     public static final String USERNAME_REGEX = "^(?!\\d)[a-zA-Z0-9_]{3,20}$";
     public static final String PASSWORD_REGEX = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$";
-    public static final String GMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" ;
+    public static final String EMAIL_REGEX = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
 
     @Autowired
     private UserRepository userRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     @Transactional
@@ -34,15 +36,12 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Password is not strong enough");
         }
 
-        if (!user.getEmail().matches(GMAIL_REGEX)) {
+        if (!user.getEmail().matches(EMAIL_REGEX)) {
             throw new IllegalArgumentException("Invalid email format");
         }
-        user.setRole_id(1);; // Default role for users is 1
 
-        // Tạo timestamp cho ngày đăng ký
-        Timestamp registrationTimestamp = new Timestamp(new Date().getTime());
-        user.setRegistrationDate(registrationTimestamp);
-    
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
         return userRepository.save(user);
     }
 
@@ -50,15 +49,12 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void loginUser(String username, String password) {
         UserEntity existingUser = userRepository.findByUsername(username);
-        if (existingUser == null ) {
-
+        if (existingUser == null) {
             throw new IllegalArgumentException("Username does not exist");
         } else {
-
-            if (!existingUser.getPassword().equals(password)) {
+            if (!passwordEncoder.matches(password, existingUser.getPassword())) {
                 throw new IllegalArgumentException("Incorrect password");
             }
         }
     }
-
 }

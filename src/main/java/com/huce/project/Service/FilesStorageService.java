@@ -1,4 +1,4 @@
-package com.huce.project.Service;
+package com.huce.project.service;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 
