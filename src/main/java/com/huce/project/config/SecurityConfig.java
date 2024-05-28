@@ -25,7 +25,9 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeRequests(authorize -> authorize
                 .requestMatchers("/users/register").permitAll() 
-                .requestMatchers("/users/login").permitAll()    
+                .requestMatchers("/users/login").permitAll() 
+                .requestMatchers("/upload").permitAll() 
+                .requestMatchers("/files/**").permitAll()     
                 .anyRequest().authenticated()               
             )
             .sessionManagement(session -> session

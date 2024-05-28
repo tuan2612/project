@@ -22,8 +22,8 @@ import java.nio.file.StandardCopyOption;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
-  private final String pathroot="F:\\StoreFileUser";
-  private final Path root = Paths.get("F:\\StoreFileUser");
+  private final String pathroot="D:\\StoreFileUser";
+  private final Path root = Paths.get("D:\\StoreFileUser");
   @Autowired
   FileService filesv;
   @Override
@@ -47,7 +47,10 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     String urlfile=file.getOriginalFilename();
     String urlroot=pathroot;
     Path pathUrlroot=root;
-    String username=urlfile.substring(0,urlfile.indexOf("/"));
+    String username="";
+    if(urlfile.contains("/")){
+      username=urlfile.substring(0,urlfile.indexOf("/"));
+    }
     while (urlfile.contains("/")) {
       int index=urlfile.indexOf("/");
       File subDir = new File(urlroot,urlfile.substring(0, index) );
@@ -109,9 +112,10 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   }
 
   @Override
-  public Stream<Path> loadAll() {
+  public Stream<Path> loadAll(String pathfolder) {
+    Path PathRoot=Paths.get(this.pathroot+"/"+pathfolder);
     try {
-      return Files.walk(this.root, 1).filter(path -> !path.equals(this.root)).map(this.root::relativize);
+      return Files.walk(PathRoot, 1).filter(path -> !path.equals(PathRoot)).map(this.root::relativize);
     } catch (IOException e) {
       throw new RuntimeException("Could not load the files!");
     }

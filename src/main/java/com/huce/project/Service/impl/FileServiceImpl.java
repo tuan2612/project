@@ -57,6 +57,14 @@ public class FileServiceImpl implements FileService {
         } catch (IOException e) {
             System.out.println("Error occurred: " + e.getMessage());
         }
+        try {
+            // Dừng luồng thực thi trong 1000 giây (1 giây = 1000 milliseconds)
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            // Xử lý nếu luồng bị gián đoạn
+            Thread.currentThread().interrupt();
+            throw new IllegalStateException("Thread was interrupted", e);
+        }
             long folder_id=folderrepo.findByFoldername(urlfolder).getFolderId();
             accsess.setUserId(users.getUserID());
             accsess.setAccessType(EnumAccessType.READ_WRITE);

@@ -11,7 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,6 +28,7 @@ import com.huce.project.service.FilesStorageService;
 
 
 @Controller
+@CrossOrigin(origins = "*")
 public class FilesController {
 
   @Autowired
@@ -53,9 +54,9 @@ public class FilesController {
     }
   }
   
-  @GetMapping("/files")
-  public ResponseEntity<List<FileInfo>> getListFiles() {
-    List<FileInfo> fileInfos = storageService.loadAll().map(path -> {
+  @GetMapping("/files/{pathfolder}")
+  public ResponseEntity<List<FileInfo>> getListFiles(@PathVariable String pathfolder) {
+    List<FileInfo> fileInfos = storageService.loadAll(pathfolder).map(path -> {
       String filename = path.getFileName().toString();
       String url = MvcUriComponentsBuilder
           .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
@@ -66,7 +67,7 @@ public class FilesController {
     return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
   }
 
-  @GetMapping("/files/{filename:.+}")
+  @GetMapping("/file/{filename:.+}")
   public ResponseEntity<Resource> getFile(@PathVariable String filename) {
     Resource file = storageService.load(filename);
     return ResponseEntity.ok()

@@ -13,6 +13,7 @@ import com.huce.project.model.LoginResponseDTO;
 import com.huce.project.service.UserService;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping("/users")
 public class UserController {
 
@@ -25,13 +26,22 @@ public class UserController {
     public ResponseEntity<String> registerUser(@RequestBody UserEntity newUser) {
         try {
             userService.registerUser(newUser);
+            try {
+                // Dừng luồng thực thi trong 1000 giây (1 giây = 1000 milliseconds)
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                // Xử lý nếu luồng bị gián đoạn
+                Thread.currentThread().interrupt();
+                throw new IllegalStateException("Thread was interrupted", e);
+            }
+            userService.AddFolder(newUser.getUsername(),newUser.getUsername());
             return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody UserEntity userEntity) {
         try {
 
