@@ -34,7 +34,6 @@ public class SecurityConfig {
             .authorizeRequests(authorize -> authorize
                 .requestMatchers("/users/register").permitAll()
                 .requestMatchers("/users/login").permitAll()
-                .requestMatchers("/upload").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

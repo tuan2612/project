@@ -5,7 +5,7 @@ import lombok.*;
 @NoArgsConstructor
 public class FileInfo {
     private String name;
-    private String url;
-  
+    private String size;
+    private String DateCreate;
 
   }

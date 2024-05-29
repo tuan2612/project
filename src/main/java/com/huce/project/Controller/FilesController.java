@@ -1,5 +1,9 @@
 package com.huce.project.controller;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
@@ -37,9 +42,10 @@ public class FilesController {
   @Autowired
   FilesStorageService storageService;
   SessionService ssservice=new SessionService();
-  @PostMapping("/upload")
-  public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) {
-    String message = "";        
+  @PostMapping("/upload/{username}")
+  public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files,@PathVariable String username) {
+
+    String message = "";     
     try {
       List<String> fileNames = new ArrayList<>();
 
@@ -57,21 +63,28 @@ public class FilesController {
     }
   }
   
-  @GetMapping("/files/{username}/{pathfolder}")
-  public ResponseEntity<?> getListFiles(@PathVariable String username,@PathVariable String pathfolder,HttpSession session) {
-    if(ssservice.CheckSession(session,username )){
-      List<FileInfo> fileInfos = storageService.loadAll(pathfolder).map(path -> {
-        String filename = path.getFileName().toString();
-        String url = MvcUriComponentsBuilder
-            .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-  
-        return new FileInfo(filename, url);
-      }).collect(Collectors.toList());
-  
-      return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+
+    @GetMapping("/files/{username}/{pathfolder}")
+    public ResponseEntity<?> getListFiles(@PathVariable String username, @PathVariable String pathfolder) {
+      String rootFolderPath = "D:\\StoreFileUser\\"+pathfolder;
+      Path rootPath = Path.of(rootFolderPath);
+        List<FileInfo> fileInfos = storageService.loadAll(pathfolder).map(path -> {
+            String filename = path.getFileName().toString();
+            Path fullPath=rootPath.resolve(filename);
+            try {
+                BasicFileAttributes attrs = Files.readAttributes(fullPath, BasicFileAttributes.class);
+                String size = String.valueOf(attrs.size());
+                String dateCreate = String.valueOf(attrs.creationTime());
+                return new FileInfo(filename, size, dateCreate);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
     }
-    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
-  }
+
 
   @GetMapping("/file/{filename:.+}")
   public ResponseEntity<Resource> getFile(@PathVariable String filename) {

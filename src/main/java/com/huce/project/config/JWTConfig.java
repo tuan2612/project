@@ -6,6 +6,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Date;
+import java.util.function.Function;
 
 public class JWTConfig {
 
@@ -34,7 +35,26 @@ public class JWTConfig {
             return false;
         }
     }
-
+    public static Boolean validateToken(String token, String name) {
+        final String username = extractUsername(token);
+        return (username.equals(name) && !isTokenExpired(token));
+    }
+    private static Boolean isTokenExpired(String token) {
+        return extractExpiration(token).before(new Date());
+    }
+    public static Date extractExpiration(String token) {
+        return extractClaim(token, Claims::getExpiration);
+    }
+    private static Claims extractAllClaims(String token) {
+        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+    }
+    public static String extractUsername(String token) {
+        return extractClaim(token, Claims::getSubject);
+    }
+        public static <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
+        final Claims claims = extractAllClaims(token);
+        return claimsResolver.apply(claims);
+    }
     public static String getUsernameFromToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)

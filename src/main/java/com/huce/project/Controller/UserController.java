@@ -52,7 +52,7 @@ public class UserController {
             userService.loginUser(loginRequestDTO.getUsername(), loginRequestDTO.getPassword());
 
             String token = JWTConfig.generateToken(response,loginRequestDTO.getUsername());
-            LoginResponseDTO responseDTO = new LoginResponseDTO(token);
+            LoginResponseDTO responseDTO = new LoginResponseDTO(token,userEntity.getUsername());
             session.setAttribute("name", userEntity.getUsername());
             session.setAttribute("token", token);
             return ResponseEntity.ok(responseDTO);
