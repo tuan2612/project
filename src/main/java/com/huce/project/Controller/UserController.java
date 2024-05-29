@@ -54,6 +54,7 @@ public class UserController {
             String token = JWTConfig.generateToken(response,loginRequestDTO.getUsername());
             LoginResponseDTO responseDTO = new LoginResponseDTO(token);
             session.setAttribute("name", userEntity.getUsername());
+            session.setAttribute("token", token);
             return ResponseEntity.ok(responseDTO);
         } catch (IllegalArgumentException e) {
             // Nếu có lỗi xảy ra trong quá trình đăng nhập, trả về lỗi UNAUTHORIZED
