@@ -22,6 +22,9 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import com.huce.project.message.ResponseMessage;
 import com.huce.project.model.FileInfo;
 import com.huce.project.service.FilesStorageService;
+import com.huce.project.service.SessionService;
+
+import jakarta.servlet.http.HttpSession;
 
 
 
@@ -33,7 +36,7 @@ public class FilesController {
 
   @Autowired
   FilesStorageService storageService;
-
+  SessionService ssservice=new SessionService();
   @PostMapping("/upload")
   public ResponseEntity<ResponseMessage> uploadFiles(@RequestParam("files") MultipartFile[] files) {
     String message = "";        
@@ -54,17 +57,20 @@ public class FilesController {
     }
   }
   
-  @GetMapping("/files/{pathfolder}")
-  public ResponseEntity<List<FileInfo>> getListFiles(@PathVariable String pathfolder) {
-    List<FileInfo> fileInfos = storageService.loadAll(pathfolder).map(path -> {
-      String filename = path.getFileName().toString();
-      String url = MvcUriComponentsBuilder
-          .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
-
-      return new FileInfo(filename, url);
-    }).collect(Collectors.toList());
-
-    return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+  @GetMapping("/files/{username}/{pathfolder}")
+  public ResponseEntity<?> getListFiles(@PathVariable String username,@PathVariable String pathfolder,HttpSession session) {
+    if(ssservice.CheckSession(session,username )){
+      List<FileInfo> fileInfos = storageService.loadAll(pathfolder).map(path -> {
+        String filename = path.getFileName().toString();
+        String url = MvcUriComponentsBuilder
+            .fromMethodName(FilesController.class, "getFile", path.getFileName().toString()).build().toString();
+  
+        return new FileInfo(filename, url);
+      }).collect(Collectors.toList());
+  
+      return ResponseEntity.status(HttpStatus.OK).body(fileInfos);
+    }
+    return ResponseEntity.status(HttpStatus.NOT_FOUND).body("File not found");
   }
 
   @GetMapping("/file/{filename:.+}")

@@ -5,12 +5,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.huce.project.config.JWTConfig;
 import com.huce.project.entity.UserEntity;
 import com.huce.project.model.LoginRequestDTO;
 import com.huce.project.model.LoginResponseDTO;
 import com.huce.project.service.UserService;
+
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -42,15 +44,16 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> loginUser(@RequestBody UserEntity userEntity) {
+    public ResponseEntity<?> loginUser(@RequestBody UserEntity userEntity,HttpSession session,HttpServletResponse response) {
         try {
 
             LoginRequestDTO loginRequestDTO = modelMapper.map(userEntity, LoginRequestDTO.class);
 
             userService.loginUser(loginRequestDTO.getUsername(), loginRequestDTO.getPassword());
 
-            String token = JWTConfig.generateToken(loginRequestDTO.getUsername());
+            String token = JWTConfig.generateToken(response,loginRequestDTO.getUsername());
             LoginResponseDTO responseDTO = new LoginResponseDTO(token);
+            session.setAttribute("name", userEntity.getUsername());
             return ResponseEntity.ok(responseDTO);
         } catch (IllegalArgumentException e) {
             // Nếu có lỗi xảy ra trong quá trình đăng nhập, trả về lỗi UNAUTHORIZED
