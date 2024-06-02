@@ -16,7 +16,7 @@ public class JWTConfig {
 
     public static String generateToken(HttpServletResponse response, String username) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME);
+        Date expiryDate = new Date(now.getTime() + EXPIRATION_TIME );
         String token = Jwts.builder()
                 .setSubject(username)
                 .setIssuedAt(new Date())

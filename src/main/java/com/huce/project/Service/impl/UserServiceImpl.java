@@ -14,6 +14,7 @@ import com.huce.project.service.UserService;
 import com.huce.project.entity.AccessRightEntity;
 import com.huce.project.entity.EnumAccessType;
 import com.huce.project.entity.FolderEntity;
+import com.huce.project.entity.Role;
 import com.huce.project.entity.UserEntity;
 
 @Service
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
+        user.setRole(Role.USER);
         return userRepository.save(user);
     }
 
