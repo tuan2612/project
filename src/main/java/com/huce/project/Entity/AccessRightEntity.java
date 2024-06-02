@@ -33,4 +33,43 @@ public class AccessRightEntity {
 
     @Column(name="typefof",nullable = false)
     private int typefof;
+    public long getAccessId() {
+        return accessId;
+    }
+
+    public void setAccessId(long accessId) {
+        this.accessId = accessId;
+    }
+
+    public long getFofId() {
+        return fofId;
+    }
+
+    public void setFofId(long fofId) {
+        this.fofId = fofId;
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public EnumAccessType getAccessType() {
+        return accessType;
+    }
+
+    public void setAccessType(EnumAccessType accessType) {
+        this.accessType = accessType;
+    }
+
+    public int getTypefof() {
+        return typefof;
+    }
+
+    public void setTypefof(int typefof) {
+        this.typefof = typefof;
+    }
 }

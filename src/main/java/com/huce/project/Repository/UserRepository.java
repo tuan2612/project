@@ -8,6 +8,5 @@ import com.huce.project.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
     UserEntity findByUsername(String userName);
-
 }
 

@@ -6,6 +6,10 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +19,20 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.huce.project.entity.AccessRightEntity;
+import com.huce.project.entity.EnumAccessType;
+import com.huce.project.entity.FileEntity;
+import com.huce.project.entity.FolderEntity;
+import com.huce.project.model.FileInfo;
+import com.huce.project.repository.AccessRightRepository;
+import com.huce.project.repository.FileRepository;
+import com.huce.project.repository.FolderRepository;
+import com.huce.project.repository.UserRepository;
 import com.huce.project.service.FileService;
 import com.huce.project.service.FilesStorageService;
 
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 
 @Service
 public class FilesStorageServiceImpl implements FilesStorageService {
@@ -26,6 +40,14 @@ public class FilesStorageServiceImpl implements FilesStorageService {
   private final Path root = Paths.get("D:\\StoreFileUser");
   @Autowired
   FileService filesv;
+  @Autowired
+  private FileRepository filerepo;
+  @Autowired
+  private FolderRepository folderrepo;
+  @Autowired
+  private AccessRightRepository accessrepo;
+  @Autowired
+  private UserRepository userrepo;
   @Override
   public void init() {
       File directory = new File(pathroot);
@@ -121,5 +143,75 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     }
   }
 
-  
+  @Override
+    public List<FileInfo> FileInfos(String rootFolderPath,String pathfolder) {
+        // TODO Auto-generated method stub
+        Path rootPath = Path.of(rootFolderPath);
+        List<FileInfo> fileInfos = loadAll(pathfolder).map(path -> {
+            String filename = path.getFileName().toString();
+            Path fullPath=rootPath.resolve(filename);
+            try {
+                BasicFileAttributes attrs = Files.readAttributes(fullPath, BasicFileAttributes.class);
+                String size = String.valueOf(attrs.size());
+                String dateCreate = String.valueOf(attrs.creationTime());
+                return new FileInfo(filename, size, dateCreate);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return null;
+            }
+        }).collect(Collectors.toList());
+        return fileInfos;
+    }
+    @Override
+    public List<String> files(String username, String foldername) {
+        List<String> fileList = new ArrayList<>();
+        UUID id=userrepo.findByUsername(username).getUserID();
+        if(id!=null){
+        List<AccessRightEntity> accesslist=accessrepo.findByUserIdAndAccessType(id, EnumAccessType.READ);
+        int count = 0;
+
+        for (int i = 0; i < foldername.length(); i++) {
+            if (foldername.charAt(i) == '\\') {
+                count++;
+            }
+        }
+        if(accesslist!=null){
+            if(count<3){
+            for (AccessRightEntity accessRightEntity : accesslist) {
+                if(accessRightEntity.getTypefof()==0){
+                    FolderEntity folders=folderrepo.findByFolderId(accessRightEntity.getFofId());
+                    if(folders!=null&&folders.getFoldername().contains(foldername)){
+                        fileList.add(folders.getFoldername());
+                    }
+                }else{
+                    FileEntity files=filerepo.findByFileId(accessRightEntity.getFofId());
+                    if(files!=null){
+                        FolderEntity folder=folderrepo.findByFolderId(files.getFolderid());
+                        fileList.add(folder.getFoldername()+"\\"+files.getFilename());
+                    }
+                }
+            }}
+            else{
+                int check=0;
+                for (AccessRightEntity accessRightEntity : accesslist){
+                  
+                  FolderEntity folders=folderrepo.findByFolderId(accessRightEntity.getFofId());
+                  if(folders!=null){
+                  if(foldername.contains(folders.getFoldername())){
+                    check++;
+                  }}
+                }
+                if(check>0){
+                  Path rootPath = Path.of(foldername);
+                  fileList = loadAll(foldername.substring(17)).map(path -> {
+                    String filename = path.getFileName().toString();
+                    Path fullPath = rootPath.resolve(filename);
+                    return fullPath.toString(); 
+                }).collect(Collectors.toList());
+                }
+            }
+        }
+        }
+        return fileList;
+    }
 }

@@ -8,9 +8,15 @@ import jakarta.persistence.Converter;
 public class RoleConvertor implements AttributeConverter<Role, String> {
 
     @Override
-    public String convertToDatabaseColumn(Role role) {
-        return role.getRoleName();
+public String convertToDatabaseColumn(Role role) {
+    if (role == null) {
+        return null;
     }
+    
+    // Ví dụ: Chuyển đổi giá trị role thành chuỗi và thực hiện bất kỳ biến đổi nào khác nếu cần
+    return role.getRoleName().toUpperCase(); // Ví dụ: Lưu trữ tên vai trò dưới dạng chữ hoa
+}
+
 
     @Override
     public Role convertToEntityAttribute(String roleName) {

@@ -4,7 +4,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +17,13 @@ import com.huce.project.repository.FileRepository;
 import com.huce.project.repository.FolderRepository;
 import com.huce.project.repository.UserRepository;
 import com.huce.project.service.FileService;
+import com.huce.project.service.FilesStorageService;
 import com.huce.project.entity.AccessRightEntity;
 import com.huce.project.entity.EnumAccessType;
 import com.huce.project.entity.FileEntity;
 import com.huce.project.entity.FolderEntity;
 import com.huce.project.entity.UserEntity;
+import com.huce.project.model.FileInfo;
 import com.huce.project.repository.AccessRightRepository;
 @Service
 public class FileServiceImpl implements FileService {
@@ -82,7 +89,7 @@ public class FileServiceImpl implements FileService {
             Date openDate = new Date(openTimeInMillis);
             file.setFilename(namefile);
             file.setFiletype(namefile.substring(namefile.indexOf(".")+1));
-            file.setFolder_id(folder_id);
+            file.setFolderid(folder_id);
             file.setCreatedAt(openDate);
             file.setFileSize(size);
             filerepo.save(file);
@@ -92,6 +99,7 @@ public class FileServiceImpl implements FileService {
         }
     }
         }
+    
     }
     
 
