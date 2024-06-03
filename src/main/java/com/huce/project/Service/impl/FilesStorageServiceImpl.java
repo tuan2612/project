@@ -93,9 +93,12 @@ public class FilesStorageServiceImpl implements FilesStorageService {
     try {
       int index=0;
       pathUrlroot=Paths.get(urlroot,urlfile);
+      String urlf=urlfile;
       while(Files.exists(pathUrlroot)){
+        urlfile=urlf;
+        urlfile=urlfile.substring(0,urlfile.indexOf("."))+"("+String.valueOf(index)+")"+urlfile.substring(urlfile.indexOf("."));
         index++;
-        pathUrlroot=Paths.get(urlroot,urlfile.substring(0,urlfile.indexOf("."))+"("+String.valueOf(index)+")"+urlfile.substring(urlfile.indexOf(".")));
+        pathUrlroot=Paths.get(urlroot,urlfile);
       }
       Files.copy(file.getInputStream(), pathUrlroot,StandardCopyOption.REPLACE_EXISTING);
     } catch (Exception e) {

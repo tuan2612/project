@@ -20,4 +20,5 @@ public interface FilesStorageService {
   public Stream<Path> loadAll(String pathfolder);
   List<FileInfo>FileInfos(String rootFolderPath,String pathfolder);
   List<String> files(String username,String foldername);
+  
 }

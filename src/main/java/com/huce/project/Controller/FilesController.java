@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import com.huce.project.entity.AccessRightEntity;
 import com.huce.project.entity.EnumAccessType;
 import com.huce.project.entity.FileEntity;
+import com.huce.project.entity.FolderEntity;
 import com.huce.project.message.ResponseMessage;
 import com.huce.project.model.FileInfo;
 import com.huce.project.repository.AccessRightRepository;
@@ -156,5 +158,52 @@ public class FilesController {
       accessrepo.save(access);
     }
     return ResponseEntity.status(HttpStatus.OK).body("chia sẻ thành công");
+  }
+  @PostMapping("remove/{username}/{filename}")
+  public ResponseEntity<String> Remove(@PathVariable String filename,@RequestHeader("name") String headerValue,@PathVariable String username){ 
+    if(headerValue.equals(username)){
+      filename=filename.replace("|", "\\");
+      filename="D:\\StoreFileUser\\"+filename;
+      try {
+      if(filename.contains(".")){
+        String folderpath = filename.substring(0, filename.lastIndexOf("\\"));
+        String filepath = filename.substring( filename.lastIndexOf("\\")+1);
+        FolderEntity folder=folderrepo.findByFoldername(folderpath);
+        long id_fol=folder.getFolderId();
+        if(folder!=null){
+          long file_id=filerepo.findByFilenameAndFolderid(filepath,folder.getFolderId()).getFileId();
+          AccessRightEntity access=accessrepo.findByFofIdAndTypefof(id_fol, 1);
+          if(file_id!=0&&access!=null&&access.getAccessType()==EnumAccessType.READ_WRITE){
+          filerepo.deleteByFileId(file_id);
+          accessrepo.deleteByFofIdAndTypefof(file_id,1);
+        }
+        }
+      }
+      else{
+        FolderEntity folder=folderrepo.findByFoldername(filename);
+        long folder_id=folder.getFolderId();
+        System.out.println("1234566789");
+        AccessRightEntity access=accessrepo.findByFofIdAndTypefof(folder_id, 0);
+        System.out.println(access+"12345667");
+        if(folder!=null&&access.getAccessType()==EnumAccessType.READ_WRITE){
+          folderrepo.deleteByFolderId(folder_id);
+          List<FileEntity> files=filerepo.findByFolderid(folder_id);
+          if(files.size()!=0){
+            for (FileEntity fileEntity : files) {
+              filerepo.deleteByFileId(fileEntity.getFileId());
+              accessrepo.deleteByFofIdAndTypefof(fileEntity.getFileId(), 1);
+            }
+          }
+          accessrepo.deleteByFofIdAndTypefof(folder_id, 0);
+        }
+      }
+
+      return ResponseEntity.status(HttpStatus.OK).body("chia sẻ thành công");
+              
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.toString());
+    }
+    }
+    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("bạn không có quyền");
   }
 }
